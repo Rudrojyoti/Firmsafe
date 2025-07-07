@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<div id="desease">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Recognition System</title>
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    vertical-align: middle;
+    padding: 0;
+    background: linear-gradient(135deg, #e0f8e0, #c0eac0);
+    color: #2c3e50;
+    overflow-x: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    transform: perspective(1000px) rotateX(10deg);
+    transition: transform 0.3s, background 0.5s ease-in-out;
+}
+
+header:hover {
+    transform: perspective(1000px) rotateX(0deg);
+    background: linear-gradient(135deg, #1e8449, #145a32);
+}
+
+header img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+h1:hover {
+    transform: scale(1.05);
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin-top: 10px;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+}
+
+section {
+    margin: 30px 0;
+    vertical-align: middle;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    text-align: center;
+    vertical-align: middle;
+    color: #27ae60;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    animation: slideInLeft 1s ease-in-out;
+}
+
+/* Highlight Boxes with Animation */
+.highlight-box, .lightbox {
+    background: #d4edda;
+    padding: 15px;
+    border-left: 5px solid #27ae60;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    animation: popUp 1s ease-in-out;
+}
+
+.highlight-box::before, .lightbox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(39, 174, 96, 0.1);
+    animation: highlightGlow 2s infinite;
+}
+
+/* Buttons */
+button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+button:hover {
+    background: #1e8449;
+    transform: scale(1.1);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* Image Upload */
+input[type="file"] {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    border: 2px dashed #27ae60;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border 0.3s, transform 0.3s;
+}
+
+input[type="file"]:hover {
+    border-color: #219150;
+    transform: scale(1.05);
+}
+
+input[type="submit"]{
+    display: block;
+    background-color: #27ae60;
+    color: white;
+    margin: 10px auto;
+    padding: 10px;
+    border: 2px #27ae60;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border 0.3s, transform 0.3s;
+}
+
+input[type="submit"]:hover {
+    border-color: #219150;
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #27ae60;
+    color: white;
+    font-size: 1rem;
+    margin-top: 20px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes highlightGlow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes popUp {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    nav ul li { display: block; margin: 10px 0; }
+}
+
+    </style>
+</head>
+<body id="body1">
+    <header>
+        <h1><img src="https://images.unsplash.com/photo-1498408040764-ab6eb772a145?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="1260px" height="480px" style="margin-right: 10px"  alt="Plant Icon"> <br><b> <align> <i>Plant Disease Recognition System </align></b> </i></h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Disease Recognition</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="intro">
+            <h2><img src="https://i.pinimg.com/736x/fd/a5/43/fda543fc9c3966bda147a8d64be64639.jpg" width="400px" height="400px" vertical-align="middle" alt="Farmer holding a plant" class="huh"><br>Welcome to Plant Disease Recognition System</h2>
+            <div class="highlight-box">
+                <p>Welcome to the Plant Disease Recognition System! 🌱 This system helps farmers identify plant diseases easily. Just upload a plant image, and our AI model will detect diseases accurately! ✅</p>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2>How it Works</h2>
+            <div class="highlight-box">
+                <p>1. <strong>Image Upload:</strong> Farmers can upload images of affected plants to the system.</p>
+                <p>2. <strong>AI Model Analysis:</strong> Our advanced AI model, trained on a vast dataset of plant images, analyzes the uploaded image to detect signs of disease.</p>
+                <p>3. <strong>Disease Identification:</strong> The AI model identifies the specific disease affecting the plant, providing accurate results.</p>
+            </div>
+        </section>
+
+        <section id="key-features">
+            <h2>Key Features</h2>
+            <div class="highlight-box">
+                <p>1. <strong>Accuracy:</strong> Our AI model ensures high accuracy in disease detection, reducing the risk of misidentification.</p>
+                <p>2. <strong>Speed:</strong> The system provides quick results, enabling farmers to take prompt action to prevent disease spread.</p>
+                <p>3. <strong>Ease of Use:</strong> The user-friendly interface allows farmers to easily upload images and receive results.</p>
+                <p>4. <strong>Comprehensive Database:</strong> Our database includes a wide range of plant diseases, ensuring that farmers can identify and address various issues.</p>
+            </div>
+        </section>
+
+        <section id="benefits-for-farmers">
+            <h2>Benefits for Farmers</h2>
+            <div class="highlight-box">
+                <p>1. <strong>Improved Crop Yield:</strong> Early disease detection enables farmers to take timely action, reducing crop damage and improving yields.</p>
+                <p>2. <strong>Reduced Chemical Use:</strong> Accurate disease identification helps farmers apply targeted treatments, minimizing chemical usage and environmental impact.</p>
+                <p>3. <strong>Increased Efficiency:</strong> The system saves farmers time and effort, allowing them to focus on other critical aspects of farming.</p>
+            </div>
+        </section>
+
+        <section id="sustainable-agriculture">
+            <h2>Empowering Sustainable Agriculture</h2>
+            <div class="highlight-box">
+                <p>The Plant Disease Recognition System contributes to sustainable agriculture by:</p>
+                <p>1. <strong>Enhancing Food Security:</strong> By improving crop yields and reducing disease-related losses.</p>
+                <p>2. <strong>Promoting Eco-Friendly Practices:</strong> By minimizing chemical usage and encouraging targeted treatments.</p>
+                <p>3. <strong>Supporting Farmer Livelihoods:</strong> By providing accurate disease detection and improving farming efficiency.</p>
+            </div>
+        </section>
+
+        <section id="disease-recognition">
+            <h2><img src="https://images.unsplash.com/photo-1692481060581-98c224124f12?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGxhbnQlMjBkaXNlYXNlfGVufDB8fDB8fHww" alt="Confused Emoji"><br> Disease Recognition System </h2>
+            <div class="highlight-box packed-colorful-box">
+                <form class="p-3 text-center" action="/pred", method="POST" enctype="multipart/form-data">
+                <input class="form-control" type="file" name="file" required>
+                <input class="btn btn-primary" type="submit" value="Predict Image">
+                </form>
+                {% if prediction %}
+                    <div class="highlight-box">
+                         <h3>Predicted Disease: {{ prediction }}</h3>
+                    </div>
+                {% endif %}
+            
+    
+            </div>         
+            <div id="result">
+                <!-- <img id="uploadedImage" src="image_url" alt="Uploaded Image"> -->
+                <div id="plantInfo">
+                    {% if prediction %}
+                        <p><strong>Predicted Disease:{{title}}</strong></p> 
+                        <p><strong>Disease Info:{{desc}}</strong></p>
+                        <p><strong>Supplement Info:{{sname}}</strong></p> 
+                        
+                    {% endif %}
+                    <!-- <p><strong>पौधा (Plant):</strong> <span id="plantName"></span></p>
+                    <p><strong>रोग (Disease):</strong> <span id="diseaseName"></span></p>
+                    <p><strong>विश्वसनीयता (Confidence):</strong> <span id="confidence"></span>%</p> -->
+                </div>
+                
+            </div>
+            <script src="script.js"></script>
+        </section>
+        
+    </main>
+        
+
+    <footer>
+        <p></p>
+    </footer>
+</div>
+<div id="weather">
+
+    <body id="body2">
+        <header>
+            <h1><img src="https://images.unsplash.com/photo-1561470508-fd4df1ed90b2?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="1480" height="500"  alt="weather "> <br><b> <align> <i>Weather Prediction System</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Weather Prediction</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+        <main>
+            <section id="intro">
+                <h2><img src="https://images.unsplash.com/photo-1562494400-5b335a653209?q=80&w=1962&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" height="480px" width="720px"  alt="weatherforecasting"><br>Weather Prediction System</h2>
+                <div class="lightbox">
+                    <p>Welcome to the Weather Prediction System! 🌱 This system helps farmers predicting weather. Just upload a plant image, and our AI model will detect diseases accurately! ✅</p>
+                </div>
+            </section>
+    
+            <section id="how-it-works">
+                <h2>How it Works</h2>
+                <div class="lightbox">
+                    <p>A. <strong>Accurate Weather Forecasts:</strong>
+                        <br/>
+                        1.Real-time weather updates.
+                        <br/>
+                        2.Short-term and long-term weather predictions.
+                        <br/>
+                        3.Detailed information on temperature, precipitation, humidity, wind speed, and direction.</p>
+                        <p>B. <strong>Soil and Crop-Specific Data:</strong>
+                            <br/>
+                            1.Moisture levels in the soil.
+                            <br/>
+                            2.Crop-specific weather requirements.
+                            <br/>
+                            3.Alerts for frost, drought, or excessive rainfall conditions.</p>
+                            <p>C. <strong>Custom Alerts and Notifications:</strong>
+                                <br/>
+                                1.Extreme weather warnings (e.g., storms, heatwaves).
+                                <br/>
+                                2.Disease and pest outbreak predictions based on weather conditions.
+                                <br/>
+                                3.Advisories for optimal planting and harvesting times.</p>
+                                
+                </div>
+            </section>
+    
+            <section id="key-features">
+                <h2>Key Features</h2>
+                <div class="lightbox">
+                    <p>A. <strong>Real-Time Weather Updates:</strong>
+                        <br/>
+                        1.Constantly updated weather information.
+                        <br/>
+                        2.Immediate alerts for sudden weather changes.
+                    
+                        <p>B. <strong>Accurate Forecasting:</strong>
+                            <br/>
+                            1.Short-term, medium-term, and long-term forecasts.
+                            <br/>
+                            2.High precision in predicting temperature, rainfall, humidity, wind speed, and direction.
+                            
+                            <p>C. <strong>Localized Predictions:</strong>
+                                <br/>
+                                1.Microclimate forecasting tailored to specific farm locations.
+                                <br/>
+                                2.Custom weather reports for different sections of a large farm.
+                                
+                </div>
+            </section>
+    
+            <section id="benefits-for-farmers">
+                <h2>Benefits for Farmers</h2>
+                <div class="lightbox">
+                    <p>1.  Sync with existing farm management software.</p>
+                    <p>2. Automated adjustments to irrigation systems based on weather forecasts.
+                    <p>3. Connectivity with sensors and IoT devices on the farm.
+                </div>
+            </section>
+    
+            <section id="sustainable-agriculture">
+                <h2>Empowering Sustainable Agriculture</h2>
+                <div class="lightbox">
+                    <p>The Weather Prediction System contributes to sustainable agriculture by:</p>
+                    <p>1. <strong>Optimizing Water Usage:</strong> Forecasts rainfall, allowing farmers to rely on natural precipitation when possible.</p>
+                    <p>2. <strong>Preventing Crop Damage:</strong> Provides early warnings for extreme weather events like storms, frosts, and droughts.</p>
+                    <p>3. <strong>Improving Crop Yield:</strong> Guides farmers on the best planting and harvesting times based on weather forecasts.</p>
+                </div>
+            </section>
+    
+            <section id="disease-recognition">
+                <h2><img src="https://i.pinimg.com/736x/e2/cd/d3/e2cdd364948b613e53a08a7d324d2c3e.jpg"  alt="Confused Emoji"><br> Weather Prediction System </h2>
+                <div class="weather-container">
+                    <div class="search-section">
+                        <input type="text" id="cityInput" placeholder="Enter city name">
+                        <button onclick="searchWeather()">
+                            <i class="fas fa-search">Get Weather</i>
+                        </button>
+                    </div>
+                    <div id="weatherResult" class="weather-result">
+                        <div class="main-weather">
+                            <div class="location-info">
+                                <h2 id="cityName" class="city-name"></h2>
+                                <p id="currentDate" class="current-date"></p>
+                            </div>
+                            
+                            <div class="temperature-section">
+                                <div class="temperature-main">
+                                    <h1 id="temperature" class="temperature"></h1>
+                                    <span id="description" class="description"></span>
+                                </div>
+                                <div class="weather-icon">
+                                    <i id="weatherIcon" class="fas"></i>
+                                </div>
+                            </div>
+                        </div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tint"></i>
+                        <div>
+                            <span id="humidity" class="detail-value"></span>
+                            <span class="detail-label">Humidity</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <i class="fas fa-wind"></i>
+                        <div>
+                            <span id="windSpeed" class="detail-value"></span>
+                            <span class="detail-label">Wind Speed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <div>
+                            <span id="pressure" class="detail-value"></span>
+                            <span class="detail-label">Pressure</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <span id="visibility" class="detail-value"></span>
+                            <span class="detail-label">Visibility</span>
+                        </div>
+                    </div>
+                <script>
+                    const API_KEY = '50f9408ce95d1b91818b8a8e12594cff';  // OpenWeatherMap API key
+
+                    // Time and Date Functionality
+                    function updateDateTime() {
+                        const now = new Date();
+                        const dateTimeElement = document.getElementById('currentDate');
+                        
+                        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                        
+                        const day = days[now.getDay()];
+                        const date = now.getDate();
+                        const month = months[now.getMonth()];
+                        const year = now.getFullYear();
+                        
+                        let hours = now.getHours();
+                        let minutes = now.getMinutes();
+                        let seconds = now.getSeconds();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        
+                        // Convert to 12-hour format
+                        hours = hours % 12;
+                        hours = hours ? hours : 12; // the hour '0' should be '12'
+                        
+                        // Add leading zeros
+                        minutes = minutes < 10 ? '0' + minutes : minutes;
+                        seconds = seconds < 10 ? '0' + seconds : seconds;
+                        
+                        const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+                        const dateString = `${day}, ${date} ${month} ${year}`;
+                        
+                        dateTimeElement.innerHTML = `
+                            <span class="time">${timeString}</span>
+                            <span class="date">${dateString}</span>
+                        `;
+                    }
+
+                    // Theme Toggle Functionality
+                    function initThemeToggle() {
+                        const themeToggle = document.getElementById('theme-toggle');
+                        const htmlElement = document.documentElement;
+
+                        // Check for saved theme preference or default to dark mode
+                        const savedTheme = localStorage.getItem('weatherAppTheme') || 'dark';
+                        htmlElement.setAttribute('data-theme', savedTheme);
+                        themeToggle.checked = savedTheme === 'light';
+
+                        // Theme toggle event listener
+                        themeToggle.addEventListener('change', function() {
+                            const newTheme = this.checked ? 'light' : 'dark';
+                            htmlElement.setAttribute('data-theme', newTheme);
+                            localStorage.setItem('weatherAppTheme', newTheme);
+                        });
+                    }
+
+                    function searchWeather() {
+                        const cityInput = document.getElementById('cityInput');
+                        const cityName = document.getElementById('cityName');
+                        const currentDate = document.getElementById('currentDate');
+                        const temperature = document.getElementById('temperature');
+                        const description = document.getElementById('description');
+                        const humidity = document.getElementById('humidity');
+                        const windSpeed = document.getElementById('windSpeed');
+                        const pressure = document.getElementById('pressure');
+                        const visibility = document.getElementById('visibility');
+                        const weatherIcon = document.getElementById('weatherIcon');
+                        const weatherResult = document.getElementById('weatherResult');
+
+                        const city = cityInput.value.trim();
+                        if (!city) {
+                            alert('Please enter a city name');
+                            return;
+                        }
+
+                        // Remove any existing script tag
+                        const oldScript = document.getElementById('weather-script');
+                        if (oldScript) {
+                            oldScript.remove();
+                        }
+
+                        // Create a new script element for JSONP request
+                        const script = document.createElement('script');
+                        script.id = 'weather-script';
+                        script.src = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&callback=handleWeatherResponse`;
+                        document.body.appendChild(script);
+
+                        // Error handling for script loading
+                        script.onerror = function() {
+                            alert('Failed to fetch weather data. Please check your internet connection.');
+                        };
+                    }
+
+                    // Global callback function to handle the JSONP response
+                    function handleWeatherResponse(data) {
+                        try {
+                            console.log('Received Weather Data:', data);
+
+                            if (data.cod !== 200) {
+                                alert(`Error: ${data.message}`);
+                                return;
+                            }
+
+                            const cityName = document.getElementById('cityName');
+                            const temperature = document.getElementById('temperature');
+                            const description = document.getElementById('description');
+                            const humidity = document.getElementById('humidity');
+                            const windSpeed = document.getElementById('windSpeed');
+                            const pressure = document.getElementById('pressure');
+                            const visibility = document.getElementById('visibility');
+                            const weatherIcon = document.getElementById('weatherIcon');
+                            const weatherResult = document.getElementById('weatherResult');
+
+                            // Set weather details
+                            cityName.textContent = data.name;
+                            temperature.textContent = `${Math.round(data.main.temp)}°C`;
+                            description.textContent = data.weather[0].description;
+                            humidity.textContent = `${data.main.humidity}%`;
+                            windSpeed.textContent = `${data.wind.speed} m/s`;
+                            pressure.textContent = `${data.main.pressure} hPa`;
+                            visibility.textContent = `${(data.visibility / 1000).toFixed(1)} km`;
+
+                            // Set dynamic weather icon
+                            const weatherCondition = data.weather[0].main.toLowerCase();
+                            weatherIcon.className = 'fas';  // Reset classes
+                            
+                            // Map weather conditions to Font Awesome icons
+                            const iconMap = {
+                                'clear': 'fa-sun',
+                                'clouds': 'fa-cloud',
+                                'rain': 'fa-cloud-rain',
+                                'drizzle': 'fa-cloud-sun-rain',
+                                'thunderstorm': 'fa-bolt',
+                                'snow': 'fa-snowflake',
+                                'mist': 'fa-smog'
+                            };
+
+                            weatherIcon.classList.add(iconMap[weatherCondition] || 'fa-cloud');
+
+                            weatherResult.style.display = 'block';
+                        } catch (error) {
+                            console.error('Error processing weather data:', error);
+                            alert('Failed to process weather data');
+                        }
+                    }
+
+                    // Event listener for Enter key
+                    document.getElementById('cityInput').addEventListener('keypress', function(event) {
+                        if (event.key === 'Enter') {
+                            searchWeather();
+                        }
+                    });
+
+                    // Add network status event listeners for debugging
+                    window.addEventListener('online', () => {
+                        console.log('Network connection restored');
+                    });
+
+                    window.addEventListener('offline', () => {
+                        console.log('Network connection lost');
+                    });
+
+                    // Initialize on page load
+                    document.addEventListener('DOMContentLoaded', () => {
+                        initThemeToggle();
+                        
+                        // Update time immediately and then every second
+                        updateDateTime();
+                        setInterval(updateDateTime, 1000);
+                    });
+
+                </script>
+            </section>
+        </main>
+    
+        <footer>
+            <p> 2025 Crop Disease-recognition and Weather Forecasting System</p>
+        </footer>
+    </div>
+    
+</body>
+</html>
